@@ -1,0 +1,32 @@
+﻿# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+.env
+.env.*
+
+# Editor settings
+.vscode/
+.idea/
+*.swp
+
+# Logs
+*.log
+logs/
+
+# macOS
+.DS_Store
+
+# Package files
+*.egg-info/
+build/
+dist/
+
+# ExcelAgent artifacts
+*.sqlite3
+*.db
+
+temp/
