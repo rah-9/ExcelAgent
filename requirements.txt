@@ -1,0 +1,15 @@
+openpyxl>=3.1.2
+pytesseract>=0.3.10
+opencv-python>=4.8.0
+Pillow>=10.0.0
+PyAutoGUI>=0.9.54
+pyyaml>=6.0
+requests>=2.31.0
+pdf2image>=1.16.3
+pydantic>=2.4.0
+rich>=13.5.0
+watchdog>=3.0.0
+psutil>=5.9.0
+rapidfuzz>=3.2.0
+mss>=9.0.1
+pygetwindow>=0.0.9

@@ -1,0 +1,89 @@
+# Excel Automation Agent Configuration
+agent:
+  name: "ExcelAutoAgent"
+  version: "1.0.0"
+  max_retries: 3
+  autonomy_level: "high"  # low, medium, high
+  ask_user_threshold: 3   # retries before asking user
+
+ollama:
+  model: "llama3"
+  base_url: "http://localhost:11434"
+  timeout: 120
+  temperature: 0.1
+  max_tokens: 4096
+  # GPU-specific settings for RTX 2050 / CPU fallback
+  gpu_layers: 20          # reduce for low VRAM
+  cpu_threads: 4
+  low_vram_mode: true
+
+perception:
+  ocr_engine: "tesseract"
+  tesseract_cmd: "F:\\D folder\\openOCR\\tesseract.exe"
+  languages: ["eng"]
+  preprocessing:
+    grayscale: true
+    threshold: true
+    denoise: true
+    deskew: true
+    scale_factor: 2.0
+    blur_kernel: 3
+
+executor:
+  default_mode: "direct"    # direct | ui
+  fallback_mode: "ui"
+  ui_action_delay: 0.5
+  ui_load_wait: 5.0         # Wait time for Excel to load
+  ui_save_wait: 2.0         # Wait time for saving
+  ui_screenshot_on_fail: true
+  excel:
+    default_font: "Calibri"
+    header_font: "Calibri"
+    header_font_size: 12
+    header_bold: true
+    header_fill_color: "4472C4"
+    header_font_color: "FFFFFF"
+    data_font_size: 11
+    auto_column_width: true
+    alignment_horizontal: "center"
+    border_style: "thin"
+
+screen_analyzer:
+  enabled: true
+  template_matching_threshold: 0.8
+  max_wait_timeout: 10
+  debug_images: false       # Set to true to save matching debug images
+
+verification:
+  check_headers: true
+  check_row_count: true
+  check_missing_data: true
+  check_file_exists: true
+  check_file_readable: true
+  tolerance_missing_percent: 5.0
+  confidence_threshold: 0.8 # Minimum verification confidence to pass
+
+memory:
+  short_term_file: "memory/short_term.json"
+  long_term_file: "memory/long_term.json"
+  max_long_term_entries: 100
+  similarity_threshold: 0.7
+
+logging:
+  level: "DEBUG"
+  file: "logs/agent.log"
+  console: true
+  max_file_size_mb: 50
+  backup_count: 5
+
+paths:
+  input_dir: "input"
+  output_dir: "output"
+  log_dir: "logs"
+  memory_dir: "memory"
+
+gpu:
+  enabled: true
+  monitor_interval: 10
+  vram_limit_mb: 2048     # RTX 2050 has ~4GB, use 2GB for agent
+  fallback_to_cpu: true

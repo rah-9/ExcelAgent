@@ -1,0 +1,152 @@
+{
+  "phase": "done",
+  "input_path": "F:\\E folder\\Excel_agent\\sample_student_data.pdf",
+  "input_type": "pdf",
+  "raw_text": "Student Marks Report\nName\nMarks\nGrade\nJohn\n85\nA\nAlice\n78\nB\nBob\n92\nA+\nEmma\n67\nC\nRahul\n88\nA\n",
+  "structured_task": {
+    "task": "create_excel",
+    "description": "Student Marks Report",
+    "columns": [
+      "Name",
+      "Marks",
+      "Grade"
+    ],
+    "data": [
+      [
+        "John",
+        85,
+        "A"
+      ],
+      [
+        "Alice",
+        78,
+        "B"
+      ],
+      [
+        "Bob",
+        92,
+        "A+"
+      ],
+      [
+        "Emma",
+        67,
+        "C"
+      ],
+      [
+        "Rahul",
+        88,
+        "A"
+      ]
+    ],
+    "formatting": {
+      "bold_headers": true,
+      "auto_width": true
+    },
+    "output_filename": "student_marks.xlsx",
+    "source": "F:\\E folder\\Excel_agent\\sample_student_data.pdf",
+    "confidence": 1.0,
+    "raw_text": "Student Marks Report\nName\nMarks\nGrade\nJohn\n85\nA\nAlice\n78\nB\nBob\n92\nA+\nEmma\n67\nC\nRahul\n88\nA\n"
+  },
+  "plan": {
+    "plan_id": "20260504_104311",
+    "task_type": "create_excel",
+    "steps": [
+      {
+        "step_id": 1,
+        "intent": "create_workbook",
+        "target": "workbook",
+        "params": {
+          "filename": "student_marks.xlsx"
+        },
+        "status": "done",
+        "attempts": 0,
+        "max_attempts": 3,
+        "error": null,
+        "execution_confidence": 1.0,
+        "is_idempotent": true
+      },
+      {
+        "step_id": 2,
+        "intent": "write_headers",
+        "target": "sheet",
+        "params": {
+          "columns": [
+            "Name",
+            "Marks",
+            "Grade"
+          ]
+        },
+        "status": "done",
+        "attempts": 0,
+        "max_attempts": 3,
+        "error": null,
+        "execution_confidence": 1.0,
+        "is_idempotent": true
+      },
+      {
+        "step_id": 3,
+        "intent": "write_data",
+        "target": "sheet",
+        "params": {},
+        "status": "done",
+        "attempts": 0,
+        "max_attempts": 3,
+        "error": null,
+        "execution_confidence": 1.0,
+        "is_idempotent": false
+      },
+      {
+        "step_id": 4,
+        "intent": "format_cells",
+        "target": "sheet",
+        "params": {
+          "bold": true
+        },
+        "status": "done",
+        "attempts": 0,
+        "max_attempts": 3,
+        "error": null,
+        "execution_confidence": 1.0,
+        "is_idempotent": true
+      },
+      {
+        "step_id": 5,
+        "intent": "save_file",
+        "target": "workbook",
+        "params": {
+          "filename": "student_marks.xlsx"
+        },
+        "status": "done",
+        "attempts": 0,
+        "max_attempts": 3,
+        "error": null,
+        "execution_confidence": 1.0,
+        "is_idempotent": true
+      }
+    ],
+    "execution_mode": "direct",
+    "planning_confidence": 1.0,
+    "created_at": "2026-05-04T10:43:11.522437",
+    "status": "created"
+  },
+  "current_step_idx": 0,
+  "execution_mode": "direct",
+  "verification_result": {
+    "passed": true,
+    "checks": {},
+    "issues": [],
+    "score": 0.0,
+    "verification_confidence": 1.0
+  },
+  "retry_count": 0,
+  "max_retries": 3,
+  "error_history": [],
+  "output_path": "output\\student_marks.xlsx",
+  "user_input_requested": false,
+  "user_input_query": "",
+  "kill_switch": "active",
+  "interpretation_confidence": 1.0,
+  "planning_confidence": 1.0,
+  "execution_confidence_overall": 1.0,
+  "verification_confidence": 1.0
+}
