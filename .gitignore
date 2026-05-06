@@ -29,5 +29,10 @@ dist/
 *.sqlite3
 *.db
 temp/
-output/
-memory/
+output/*
+!output/.gitkeep
+memory/*
+!memory/.gitkeep
+!memory/checkpoints/
+memory/checkpoints/*
+!memory/checkpoints/.gitkeep
