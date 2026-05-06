@@ -42,6 +42,11 @@ class ExecutionPolicyEngine:
             self.logger.decision(f"Execution confidence dropped ({state.execution_confidence_overall})", f"Switching to {new_mode.value}")
             return new_mode
 
+        # Rule 4: Preferred visual mode
+        if self.config.get("executor", {}).get("default_mode") == "visual":
+            self.logger.decision("Visual Mode enabled", "VISUAL mode selected for demonstration")
+            return ExecutionMode.VISUAL
+
         # Default to configured default mode or current mode
         self.logger.decision("No override policies triggered", f"Keeping current mode ({state.execution_mode.value})")
         return state.execution_mode

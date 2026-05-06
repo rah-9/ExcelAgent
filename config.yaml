@@ -30,8 +30,15 @@ perception:
     blur_kernel: 3
 
 executor:
-  default_mode: "direct"    # direct | ui
+  default_mode: "visual"    # direct | ui | visual
   fallback_mode: "ui"
+  visual:
+    typing_speed: 0.05
+    move_duration: 0.3
+    step_delay: 0.2
+    mode: "demo"            # demo | fast | debug
+    safe_mode: true         # slows down execution to save CPU
+    dry_run: false          # just logs actions without UI
   ui_action_delay: 0.5
   ui_load_wait: 5.0         # Wait time for Excel to load
   ui_save_wait: 2.0         # Wait time for saving

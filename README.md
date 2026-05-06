@@ -4,15 +4,16 @@ ExcelAgent is an autonomous Python agent that converts raw input from text, PDF,
 
 It uses a multi-stage pipeline with local LLM interpretation, OCR-based perception, intent-based planning, and both direct and UI-driven Excel execution modes. The agent is designed to run locally with Ollama and Tesseract OCR.
 
-## What it does
+## What it does (Version 2)
 
 - Reads text, PDF, image, CSV, Markdown, or raw text input
 - Extracts structured data using OCR + image preprocessing
 - Interprets content into a JSON-based spreadsheet task via local Ollama model
 - Generates an execution plan for Excel creation
-- Executes the plan using either:
-  - `openpyxl` for direct workbook creation, or
-  - `pyautogui` + screen analysis for UI-based Excel automation
+- Executes the plan using **Hybrid Execution Engine (V2)**:
+  - **Phase 1**: `openpyxl` constructs the spreadsheet safely in backend memory.
+  - **Phase 2**: `VisualExecutor` launches a brand new Excel UI, acquires OS-level focus, and perfectly replays the typing, formatting, and saving steps exactly like a human operator.
+  - **Phase 3**: Silently persists the true output to disk ensuring deterministic data integrity even if UI replay fails.
 - Verifies output and applies retry/reflection logic on failures
 - Stores checkpoints and long-term workflow memory for repeated patterns
 

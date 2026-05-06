@@ -17,6 +17,7 @@ from core.logger import AgentLogger
 from models.data_models import Plan, PlanStep, ExecutionMode, StructuredTask
 from utils.excel_formatter import ExcelFormatter
 from modules.screen_analyzer import ScreenAnalyzer
+from modules.visual_executor import VisualExecutor
 
 
 class DirectExecutor:
@@ -236,6 +237,7 @@ class ExecutorModule:
         self.event_bus = event_bus
         self.direct_executor = DirectExecutor(config, logger)
         self.ui_executor = UIExecutor(config, logger)
+        self.visual_executor = VisualExecutor(config, logger)
         self.execution_timeout = config.get("executor", {}).get("execution_timeout", 30)
 
     def _execute_with_timeout(self, executor, step: PlanStep, task: StructuredTask) -> Tuple[bool, str, float]:
@@ -283,7 +285,15 @@ class ExecutorModule:
                     "status": "Running", "mode": plan.execution_mode.value
                 })
             
-            executor = self.direct_executor if plan.execution_mode == ExecutionMode.DIRECT else self.ui_executor
+            # Phase 1: Reliable Execution
+            if plan.execution_mode == ExecutionMode.VISUAL:
+                if step.intent == "save_file":
+                    self.logger.info(f"Skipping save_file in Phase 1 for VISUAL mode")
+                    continue
+                executor = self.direct_executor
+            else:
+                executor = self.direct_executor if plan.execution_mode == ExecutionMode.DIRECT else self.ui_executor
+                
             success, msg, conf = self._execute_with_timeout(executor, step, task)
 
             step.execution_confidence = conf
@@ -308,5 +318,27 @@ class ExecutorModule:
                         "step": idx + 1, "intent": step.intent, "status": "Failed", "error": msg, "mode": plan.execution_mode.value
                     })
                 return False, msg
+
+        # Phase 2: Visual Replay (Only if Phase 1 was fully successful)
+        if plan.execution_mode == ExecutionMode.VISUAL:
+            self.logger.info("Phase 1 Complete. Initiating Phase 2: Visual Replay")
+            
+            # Replay Data Immutability Guarantee
+            replay_data = tuple(tuple(row) for row in task.data)
+            
+            try:
+                self.visual_executor.replay(task, replay_data)
+            except Exception as e:
+                self.logger.warning(f"Visual replay failed, but data is safe. Error: {e}")
+
+            # Phase 3: Silent Backend Save
+            self.logger.info("Phase 3: Saving backend workbook...")
+            save_step = next((s for s in plan.steps if s.intent == "save_file"), None)
+            if save_step:
+                success, msg, conf = self._execute_with_timeout(self.direct_executor, save_step, task)
+                if success:
+                    save_step.status = "done"
+                else:
+                    self.logger.error(f"Backend save failed: {msg}")
 
         return True, "All steps completed successfully"

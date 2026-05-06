@@ -19,6 +19,7 @@ class InputType(str, Enum):
 class ExecutionMode(str, Enum):
     DIRECT = "direct"
     UI = "ui"
+    VISUAL = "visual"
 
 class TaskType(str, Enum):
     CREATE_EXCEL = "create_excel"

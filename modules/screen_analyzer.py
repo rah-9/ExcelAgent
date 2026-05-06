@@ -53,6 +53,28 @@ class ScreenAnalyzer:
         self.logger.warning("Excel does not appear to be open or active.")
         return False
 
+    def is_excel_active(self) -> bool:
+        """
+        Check if Excel is currently the active foreground window.
+        Works on Windows.
+        """
+        try:
+            import win32gui
+
+            window = win32gui.GetForegroundWindow()
+            title = win32gui.GetWindowText(window)
+
+            if not title:
+                return False
+
+            title = title.lower()
+
+            # Excel windows usually contain these
+            return "excel" in title or ".xlsx" in title
+
+        except Exception:
+            return False
+
     def is_correct_file_open(self, expected_filename: str) -> bool:
         """Check if the active Excel window title matches the expected filename."""
         if not self.enabled:

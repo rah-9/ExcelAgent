@@ -34,9 +34,11 @@ graph TD
         ExecutionPolicy --> ExecutorModule[Executor Module]:::module
         
         ExecutorModule --> DirectExecutor[Direct Executor]:::module
+        ExecutorModule --> VisualExecutor[Visual Executor (V2)]:::module
         ExecutorModule --> UIExecutor[UI Executor]:::module
         
-        UIExecutor --> ScreenAnalyzer[Screen Analyzer]:::module
+        VisualExecutor --> ScreenAnalyzer[Screen Analyzer]:::module
+        UIExecutor --> ScreenAnalyzer
     end
 
     subgraph Feedback & Learning
@@ -67,13 +69,20 @@ sequenceDiagram
 
     loop Execution Loop
         A->>E: Execute step
-        E->>S: Update state
-        E->>V: Validate output
-        V->>A: Result
+        
+        alt Phase 1: Backend
+            E->>S: Update state
+            E->>V: Validate output
+            V->>A: Result
+        end
+        
+        alt Phase 2: Visual (If V2 Mode)
+            E->>U: Start Visual Replay
+            E->>U: Type Live in Blank Workbook
+            E->>S: Silently save backend file
+        end
 
-        alt Success
-            A->>S: Continue
-        else Failure
+        alt Failure
             A->>R: Analyze error
             R->>P: Replan / adjust
         end
@@ -107,11 +116,15 @@ classDiagram
     class ExecutorModule {
         +execute_plan()
     }
+    
+    class VisualExecutor {
+        +prepare_excel()
+        +replay()
+    }
 
     class ScreenAnalyzer {
+        +is_excel_active()
         +compare_frames()
-        +detect_text()
-        +detect_popup()
     }
 
     class ReflectionModule {
@@ -123,7 +136,9 @@ classDiagram
     StateManager --> EventBus
     ExcelAgent --> ExecutionPolicy
     ExecutionPolicy --> ExecutorModule
+    ExecutorModule --> VisualExecutor
     ExecutorModule --> ScreenAnalyzer
+    VisualExecutor --> ScreenAnalyzer
     ExecutorModule --> VerifierModule
     VerifierModule --> ReflectionModule
     ReflectionModule --> MemoryManager
