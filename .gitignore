@@ -1,4 +1,4 @@
-﻿# Python
+# Python
 __pycache__/
 *.py[cod]
 *$py.class
@@ -28,5 +28,6 @@ dist/
 # ExcelAgent artifacts
 *.sqlite3
 *.db
-
 temp/
+output/
+memory/
